@@ -1,6 +1,6 @@
 pipeline:
   build: 
-    image: registry.cn-shenzhen.aliyuncs.com/nodedev/nodejs:10.12.0-alpine
+    image: registry.cn-shenzhen.aliyuncs.com/pipipan/node:1.0
     commands:
       - npm config set registry http://registry.npm.taobao.org/
       - npm install -g
