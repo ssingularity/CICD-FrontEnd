@@ -2,8 +2,7 @@ pipeline:
   build: 
     image: registry.cn-shenzhen.aliyuncs.com/pipipan/node:1.0
     commands:
-      - npm config set registry http://registry.npm.taobao.org/
-      - npm install -g
+      - npm install
       - npm run-script build
   publish:
     image: docker
