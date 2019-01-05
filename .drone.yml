@@ -1,0 +1,30 @@
+pipeline:
+  build: 
+    image: registry.cn-shenzhen.aliyuncs.com/nodedev/nodejs:10.12.0-alpine
+    commands:
+      - npm config set registry http://registry.npm.taobao.org/
+      - npm install -g
+      - npm run-script build
+    volumes:
+      - /usr/local/lib/node_modules/:/usr/local/lib/node_modules/
+  publish:
+    image: docker
+    secrets: [docker_username,docker_password]
+    commands:
+        - docker login --username=$DOCKER_USERNAME --password=$DOCKER_PASSWORD registry.cn-shenzhen.aliyuncs.com/pipipan/meetingroom
+        - docker build -t registry.cn-shenzhen.aliyuncs.com/pipipan/frontend:master -f Dockerfile .
+        - docker push registry.cn-shenzhen.aliyuncs.com/pipipan/frontend:master
+    volumes:
+        - /var/run/docker.sock:/var/run/docker.sock
+    when:
+        branch: master
+        status: success
+
+  deploy:
+    image: appleboy/drone-ssh
+    host: 129.211.119.51
+    secrets: [ssh_username, ssh_password]
+    port: 22
+    script:
+      - /root/shell/frontend-deployment.sh
+
